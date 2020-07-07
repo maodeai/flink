@@ -20,5 +20,5 @@ t_evn.connect(FileSystem().path('/tmp/input')).with_format(OldCsv.field('word'),
 
 t_evn.connect(FileSystem.path('/tmp/output')).with_format(OldCsv.field_delimiter('\t') \
                                                           .field('word',DataTypes.STRING() \
-                                                           .with_schema()
+                                                           .with_schema()?cds
 
