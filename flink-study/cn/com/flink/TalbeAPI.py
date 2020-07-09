@@ -14,9 +14,22 @@ exec_env.set_parallelism(3)
 t_config = TableConfig()
 t_evn = BatchTableEnvironment.create(exec_env, t_config)
 
-t_evn.connect(FileSystem().path('/tmp/input')).with_format(OldCsv.field('word'),DataTypes.STRING()) \
-    .with_schema(Schema().field('word'),DataTypes.STRING()) \
+t_evn.connect(FileSystem().path('/tmp/input')) \
+    .with_format(OldCsv.field('word'), DataTypes.STRING()) \
+    .with_schema(Schema().field('word'), DataTypes.STRING()) \
     .create_temporary_table('mySource')
 
-t_evn.connect(FileSystem.path('/tmp/output')).with_format(OldCsv.field_delimiter('\t') \
-                                                          .field('word',DataTypes.STRING() \
+t_evn.connect(FileSystem.path('/tmp/output')) \
+    .with_format(OldCsv
+                 .field_delimiter('\t')
+                 .field('word', DataTypes.STRING())
+                 .field('count', DataTypes.BIGINT())) \
+    .with_schema(Schema.field('word', DataTypes.STRING())
+                 .field('count', DataTypes.BIGINT())) \
+    .create_temporary_table('mySink')
+
+t_evn.from_path('mySource').group_by('word').select('word,count(1)').insert_into('mySink')
+t_evn.execute('tutorial_job')
+
+
+
