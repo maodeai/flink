@@ -32,4 +32,5 @@ t_evn.from_path('mySource').group_by('word').select('word,count(1)').insert_into
 t_evn.execute('tutorial_job')
 
 
+2取23r
 
